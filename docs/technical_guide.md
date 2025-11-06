@@ -327,3 +327,6 @@ CREATE TABLE productos (
 ![Captura del sistema](../images/Salida%20de%20la%20terminal%20.png)
 - Mensajes del sistema
 - Confirmaciones de operaciones
+
+## 4. Diagrama UML
+![Diagrama UML](../images/diagrama_uml.png)

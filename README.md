@@ -1,175 +1,175 @@
 # 🛍️ Sistema de Gestión de Inventario EdiCommer Pro
 
-Sistema avanzado de gestión de inventario y productos desarrollado con arquitectura MVC y patrones de diseño modernos. Permite una gestión completa del ciclo de vida de productos, control de inventario, gestión de ofertas y seguimiento en tiempo real.
+Sistema de gestión de inventario desarrollado con arquitectura MVC y MySQL. Implementa operaciones CRUD básicas para la gestión de productos con una interfaz de consola intuitiva y fácil de usar.
 
-## 🏗️ Arquitectura
+## ✨ Características Principales
 
-### Estructura MVC
+- 📝 **Gestión Completa de Productos**
+  - Crear nuevos productos
+  - Listar inventario existente
+  - Actualizar información
+  - Eliminar productos
+  - Consultar por ID
+
+- 🏗️ **Arquitectura MVC Limpia**
+  - Separación clara de responsabilidades
+  - Código organizado y mantenible
+  - Patrón Singleton para conexión a BD
+
+- 🔒 **Base de Datos MySQL**
+  - Conexión segura a Clever Cloud
+  - Persistencia de datos
+  - Consultas optimizadas
+
+## 🏗️ Arquitectura del Sistema
+
+### Estructura del Proyecto
 
 ```
 Examen_ArquitecturaSW/
 │
 ├── model/
-│   ├── database.py          # Conexión Singleton a SQLite
-│   └── producto_model.py    # Acceso a datos de productos
+│   ├── database.py          # Conexión Singleton a MySQL
+│   └── producto_model.py    # Modelo de datos de productos
 │
 ├── controller/
-│   └── producto_controller.py  # Lógica de negocio y validaciones
+│   └── producto_controller.py  # Lógica de negocio
 │
 ├── view/
-│   └── producto_view.py     # Interfaz de usuario por consola
+│   └── producto_view.py     # Interfaz de consola
 │
-├── main.py                  # Punto de entrada del sistema
-└── README.md               # Documentación
+├── docs/                    # Documentación detallada
+│   ├── technical_guide.md
+│   ├── installation_guide.md
+│   ├── development_guide.md
+│   ├── api_reference.md
+│   └── database.md
+│
+├── images/                  # Capturas de pantalla
+│   ├── agregar nuevo producto.png
+│   ├── Consultar por ID.png
+│   ├── Editar producto.png
+│   ├── Eliminar Producto.png
+│   └── listar productos.png
+│
+├── main.py                 # Punto de entrada
+└── README.md              # Documentación general
 ```
 
-### Flujo de Datos MVC
+### Componentes MVC
 
-1. **Vista (View)**: 
-   - Presenta la interfaz al usuario
-   - Captura las entradas del usuario
-   - Muestra los resultados
+1. **Modelo (Model)**:
+   - `database.py`: Implementa el patrón Singleton para la conexión a MySQL
+   - `producto_model.py`: Define la estructura y operaciones de datos
 
-2. **Controlador (Controller)**:
-   - Recibe las solicitudes de la vista
-   - Aplica la lógica de negocio
-   - Valida los datos
-   - Coordina con el modelo
+2. **Vista (View)**:
+   - `producto_view.py`: Interfaz de consola interactiva
+   - Manejo de entrada/salida del usuario
+   - Presentación de datos formateada
 
-3. **Modelo (Model)**:
-   - Accede a la base de datos
-   - Realiza operaciones CRUD
-   - Retorna datos al controlador
+3. **Controlador (Controller)**:
+   - `producto_controller.py`: Coordina el flujo de datos
+   - Implementa la lógica de negocio
+   - Gestiona las operaciones CRUD
 
-**Flujo completo**: Usuario → Vista → Controlador → Modelo → Base de Datos → Modelo → Controlador → Vista → Usuario
+## 🔧 Patrón Singleton para Conexión a Base de Datos
 
-## 🔧 Patrón Singleton
-
-### Implementación
-
-El patrón Singleton está implementado en `model/database.py` mediante la clase `DatabaseConnection`.
-
-### Características:
-
-- **Garantiza una única instancia**: Aunque se cree múltiples objetos `DatabaseConnection()`, siempre se obtiene la misma instancia.
-- **Controla la conexión**: Gestiona una sola conexión a SQLite durante toda la ejecución.
-- **Inicialización lazy**: La conexión se crea solo cuando se llama a `connect()`.
-
-### Justificación:
-
-1. **Eficiencia**: Evita múltiples conexiones innecesarias a la base de datos.
-2. **Consistencia**: Garantiza que todas las operaciones usen la misma conexión.
-3. **Gestión de recursos**: Facilita el cierre y limpieza de la conexión.
-4. **Prevención de errores**: Evita problemas de concurrencia en SQLite.
-
-### Ejemplo de uso:
+La clase `DatabaseConnection` en `model/database.py` implementa el patrón Singleton para gestionar la conexión a MySQL de manera eficiente:
 
 ```python
-# Ambas variables apuntan a la misma instancia
-db1 = DatabaseConnection()
-db2 = DatabaseConnection()
-# db1 is db2 → True
-
-db1.connect()  # Crea la conexión
-conn = db2.get_connection()  # Usa la misma conexión
+class DatabaseConnection:
+    _instance = None
+    
+    def __new__(cls):
+        if cls._instance is None:
+            cls._instance = super().__new__(cls)
+        return cls._instance
 ```
 
-## 📋 Funcionalidades
+### Ventajas:
 
-### Funcionalidades Principales
+- ✨ **Conexión Única**: Una sola instancia para toda la aplicación
+- 🔄 **Reutilización**: La misma conexión se comparte entre componentes
+- 📊 **Eficiencia**: Evita múltiples conexiones innecesarias
+- 🛡️ **Consistencia**: Garantiza integridad en las operaciones de BD
 
-#### Gestión de Productos
-- 📋 **Catálogo Completo**: Vista general con ordenamiento personalizable
-- ➕ **Alta de Productos**: Sistema guiado de registro con validaciones
-- 📝 **Actualización**: Modificación con seguimiento de cambios
-- 🗑️ **Baja de Productos**: Proceso seguro con confirmación
-- 🔍 **Consultas Avanzadas**: Búsqueda por múltiples criterios
+## 📋 Operaciones CRUD
 
-#### Control de Inventario
-- 📊 **Monitoreo de Stock**: Control en tiempo real
-- ⚠️ **Alertas Automáticas**: Notificación de stock bajo
-- 📦 **Gestión de Reabastecimiento**: Control de niveles mínimos
-- 📈 **Historial**: Seguimiento de movimientos
+### Gestión de Productos
 
-#### Sistema de Ofertas
-- 🏷️ **Precios Especiales**: Gestión de ofertas y descuentos
-- 📅 **Control Temporal**: Seguimiento de vigencia
-- 🎯 **Marcado Automático**: Identificación de productos en oferta
+#### 1. Crear Producto ➕
+- Nombre del producto
+- Descripción detallada
+- Precio
+- Stock inicial
+- ![Crear Producto](images/agregar%20nuevo%20producto.png)
 
-### Sistema de Validaciones
+#### 2. Listar Productos 📋
+- Vista de todo el inventario
+- Formato de tabla clara
+- Todos los detalles del producto
+- ![Listar Productos](images/listar%20productos.png)
 
-#### Validaciones de Datos
-- ✅ **Campos Obligatorios**: 
-  - SKU, Nombre, Precio, Categoría
-- ✅ **Validaciones Numéricas**:
-  - Precios positivos y formato correcto
-  - Stock no negativo
-  - Stock mínimo válido
-- ✅ **Uniqueness**:
-  - SKU único en el sistema
-  - Control de duplicados
+#### 3. Consultar por ID 🔍
+- Búsqueda rápida por ID
+- Detalles completos del producto
+- ![Consultar Producto](images/Consultar%20por%20ID.png)
 
-#### Validaciones de Negocio
-- ✅ **Precios**:
-  - Precio de oferta menor al regular
-  - Formato decimal correcto
-- ✅ **Stock**:
-  - Alertas de nivel bajo
-  - Prevención de stock negativo
-- ✅ **Estados**:
-  - Transiciones válidas de estado
-  - Control de productos descontinuados
+#### 4. Actualizar Producto 📝
+- Modificación de cualquier campo
+- Validación de datos
+- Actualización inmediata
+- ![Editar Producto](images/Editar%20producto.png)
 
-#### Seguridad
-- 🔒 **Sanitización de Entradas**
-- 🛡️ **Prevención de SQL Injection**
-- 🔍 **Validación de Tipos de Datos**
+#### 5. Eliminar Producto 🗑️
+- Eliminación segura
+- Confirmación requerida
+- ![Eliminar Producto](images/Eliminar%20Producto.png)
 
-## 🚀 Instalación y Configuración
+### Validaciones
 
-### Requisitos del Sistema
-- 🐍 Python 3.8 o superior
-- 🗃️ MySQL Server 8.0+
-- 📦 pip (gestor de paquetes de Python)
+- ✅ Campos requeridos completos
+- 🔢 Valores numéricos válidos
+- 📝 Datos con formato correcto
+- 🛡️ Protección contra SQL injection
 
-### Instalación
+## 🚀 Instalación
+
+### Requisitos
+- 🐍 Python 3.8+
+- 📦 mysql-connector-python
+
+### Pasos de Instalación
 
 1. **Clonar el Repositorio**
 ```bash
-git clone https://github.com/tuusuario/edicommer-pro.git
-cd edicommer-pro
+git clone https://github.com/GABRIEL-708/ExamenArquitecturaSW.git
+cd ExamenArquitecturaSW
 ```
 
 2. **Instalar Dependencias**
 ```bash
-pip install -r requirements.txt
+pip install mysql-connector-python
 ```
 
 3. **Configurar Base de Datos**
-```bash
-# Crear base de datos y tablas
-mysql -u root -p < init_database.sql
-```
-
-4. **Configurar Conexión**
-- Editar `model/database.py`
-- Ajustar parámetros de conexión:
-  ```python
-  host = "tu_servidor"
-  user = "tu_usuario"
-  password = "tu_contraseña"
-  database = "edicommer"
-  ```
+- La conexión está preconfigurada a una base de datos MySQL en Clever Cloud
+- No se requiere configuración adicional
 
 ### Ejecución
 ```bash
 python main.py
 ```
 
-### Verificación
-- ✅ Conexión a base de datos exitosa
-- ✅ Creación de tablas completada
-- ✅ Sistema listo para usar
+## 📚 Documentación
+
+Para información más detallada, consulta:
+
+- 📖 [Guía Técnica](docs/technical_guide.md)
+- 🛠️ [Guía de Instalación](docs/installation_guide.md)
+- 👨‍💻 [Guía de Desarrollo](docs/development_guide.md)
+- 🔄 [Referencia de API](docs/api_reference.md)
+- 🗃️ [Documentación de Base de Datos](docs/database.md)
 
 ## 📝 Gestión Avanzada de Productos
 
